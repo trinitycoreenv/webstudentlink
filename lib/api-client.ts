@@ -1676,6 +1676,41 @@ class ApiClient {
     }
   }
 
+  // Attachment Management Methods
+  async uploadConcernAttachment(concernId: number, file: File, description?: string): Promise<any> {
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      if (description) {
+        formData.append('description', description)
+      }
+
+      const response = await this.request<{ data: any }>(`/concerns/${concernId}/attachments`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          // Don't set Content-Type, let the browser set it with boundary for FormData
+        }
+      })
+      return response.data
+    } catch (error) {
+      console.error('Failed to upload concern attachment:', error)
+      throw error
+    }
+  }
+
+  async deleteConcernAttachment(concernId: number, attachmentId: string): Promise<void> {
+    try {
+      await this.request(`/concerns/${concernId}/attachments/${attachmentId}`, {
+        method: 'DELETE'
+      })
+    } catch (error) {
+      console.error('Failed to delete concern attachment:', error)
+      throw error
+    }
+  }
+
+
 }
 
 export const apiClient = new ApiClient(API_BASE_URL)

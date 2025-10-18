@@ -1,12 +1,35 @@
 "use client"
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardAction } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Users, MessageSquare, Bell, Settings, BarChart3, Shield, Database, Bot } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
+import { 
+  Users, 
+  MessageSquare, 
+  Bell, 
+  Settings, 
+  BarChart3, 
+  Shield, 
+  Database, 
+  Bot,
+  TrendingUp,
+  Activity,
+  Clock,
+  CheckCircle,
+  AlertTriangle,
+  ArrowUpRight,
+  Zap,
+  Star,
+  Building2,
+  UserCheck,
+  Globe,
+  Cpu
+} from "lucide-react"
 import { apiClient, DashboardStats } from "@/lib/api-client"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import { cn } from "@/lib/utils"
 
 export function AdminDashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null)
@@ -56,17 +79,41 @@ export function AdminDashboard() {
   }
   if (loading) {
     return (
-      <div className="space-y-6">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="space-y-8">
+        {/* Header Skeleton */}
+        <div className="space-y-4">
+          <Skeleton className="h-8 w-64" />
+          <Skeleton className="h-4 w-96" />
+        </div>
+        
+        {/* Stats Grid Skeleton */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
-            <Card key={i} className="border-[#1E2A78]">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <div className="h-4 w-20 bg-gray-200 rounded animate-pulse"></div>
-                <div className="h-4 w-4 bg-gray-200 rounded animate-pulse"></div>
+            <Card key={i} className="border-0 shadow-sm">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-8 w-8 rounded-lg" />
               </CardHeader>
               <CardContent>
-                <div className="h-8 w-16 bg-gray-200 rounded animate-pulse mb-2"></div>
-                <div className="h-3 w-24 bg-gray-200 rounded animate-pulse"></div>
+                <Skeleton className="h-8 w-16 mb-2" />
+                <Skeleton className="h-3 w-20" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        
+        {/* Action Cards Skeleton */}
+        <div className="grid gap-6 md:grid-cols-2">
+          {[1, 2].map((i) => (
+            <Card key={i} className="border-0 shadow-sm">
+              <CardHeader>
+                <Skeleton className="h-6 w-48" />
+                <Skeleton className="h-4 w-64" />
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {[1, 2, 3].map((j) => (
+                  <Skeleton key={j} className="h-12 w-full" />
+                ))}
               </CardContent>
             </Card>
           ))}
@@ -90,160 +137,251 @@ export function AdminDashboard() {
 
   return (
     <div className="space-y-8">
-      {/* Admin Overview Cards */}
+      {/* Page Header */}
+      <div className="space-y-2">
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">Admin Dashboard</h1>
+        <p className="text-muted-foreground">
+          System overview and management tools for administrators
+        </p>
+      </div>
+
+      {/* Key Metrics Grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="border-[#1E2A78]/20 bg-gradient-to-br from-white to-blue-50/30 hover:shadow-xl hover:shadow-[#1E2A78]/10 transition-all duration-300">
+        <Card className="border-0 shadow-sm hover:shadow-md transition-all duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-semibold text-gray-700">Total Users</CardTitle>
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#2480EA] to-[#1E2A78] flex items-center justify-center shadow-lg shadow-[#2480EA]/25">
-              <Users className="h-5 w-5 text-white" />
+            <CardTitle className="text-sm font-medium text-muted-foreground">Total Users</CardTitle>
+            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+              <Users className="h-4 w-4 text-white" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-[#1E2A78] mb-1">{stats?.totalUsers || 0}</div>
-            <p className="text-sm text-gray-600 font-medium">Registered users</p>
+            <div className="text-2xl font-bold text-foreground">{stats?.totalUsers || 0}</div>
+            <p className="text-xs text-muted-foreground mt-1">Registered users</p>
           </CardContent>
         </Card>
 
-        <Card className="border-[#E22824]/20 bg-gradient-to-br from-white to-red-50/30 hover:shadow-xl hover:shadow-[#E22824]/10 transition-all duration-300">
+        <Card className="border-0 shadow-sm hover:shadow-md transition-all duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-semibold text-gray-700">Active Concerns</CardTitle>
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#E22824] to-[#DC2626] flex items-center justify-center shadow-lg shadow-[#E22824]/25">
-              <MessageSquare className="h-5 w-5 text-white" />
+            <CardTitle className="text-sm font-medium text-muted-foreground">Active Concerns</CardTitle>
+            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+              <MessageSquare className="h-4 w-4 text-white" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-[#E22824] mb-1">{stats?.activeConcerns || 0}</div>
-            <p className="text-sm text-gray-600 font-medium">Currently open</p>
+            <div className="text-2xl font-bold text-foreground">{stats?.activeConcerns || 0}</div>
+            <p className="text-xs text-muted-foreground mt-1">Currently open</p>
           </CardContent>
         </Card>
 
-        <Card className="border-green-500/20 bg-gradient-to-br from-white to-green-50/30 hover:shadow-xl hover:shadow-green-500/10 transition-all duration-300">
+        <Card className="border-0 shadow-sm hover:shadow-md transition-all duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-semibold text-gray-700">System Health</CardTitle>
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg shadow-green-500/25">
-              <Shield className="h-5 w-5 text-white" />
+            <CardTitle className="text-sm font-medium text-muted-foreground">System Health</CardTitle>
+            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
+              <Shield className="h-4 w-4 text-white" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-green-600 mb-1">{stats?.systemHealth || 0}%</div>
-            <p className="text-sm text-gray-600 font-medium">System uptime</p>
+            <div className="text-2xl font-bold text-foreground">{stats?.systemHealth || 0}%</div>
+            <p className="text-xs text-muted-foreground mt-1">System uptime</p>
           </CardContent>
         </Card>
 
-        <Card className="border-[#2480EA]/20 bg-gradient-to-br from-white to-blue-50/30 hover:shadow-xl hover:shadow-[#2480EA]/10 transition-all duration-300">
+        <Card className="border-0 shadow-sm hover:shadow-md transition-all duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-semibold text-gray-700">AI Interactions</CardTitle>
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#2480EA] to-[#1E2A78] flex items-center justify-center shadow-lg shadow-[#2480EA]/25">
-              <Bot className="h-5 w-5 text-white" />
+            <CardTitle className="text-sm font-medium text-muted-foreground">AI Interactions</CardTitle>
+            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
+              <Bot className="h-4 w-4 text-white" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-[#2480EA] mb-1">{stats?.aiInteractions || 0}</div>
-            <p className="text-sm text-gray-600 font-medium">Total interactions</p>
+            <div className="text-2xl font-bold text-foreground">{stats?.aiInteractions || 0}</div>
+            <p className="text-xs text-muted-foreground mt-1">Total interactions</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Admin Quick Actions */}
-      <div className="grid gap-8 md:grid-cols-2">
-        <Card className="bg-gradient-to-br from-white to-blue-50/20 border-[#1E2A78]/20">
+      {/* Quick Actions Grid */}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <Card className="border-0 shadow-sm hover:shadow-md transition-all duration-200 group">
           <CardHeader className="pb-4">
-            <CardTitle className="text-[#1E2A78] text-xl font-bold">System Management</CardTitle>
-            <CardDescription className="text-gray-600">Manage system-wide settings and configurations</CardDescription>
+            <div className="flex items-center justify-between">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                <Users className="h-5 w-5 text-white" />
+              </div>
+              <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-blue-600 transition-colors" />
+            </div>
+            <CardTitle className="text-lg font-semibold">User Management</CardTitle>
+            <CardDescription>Manage all system users and permissions</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent>
             <Button 
               onClick={handleManageUsers}
-              className="w-full justify-start h-12 text-left bg-gradient-to-r from-[#1E2A78] to-[#2480EA] hover:from-[#1A2568] hover:to-[#1E6FD8] shadow-lg shadow-[#1E2A78]/25"
+              className="w-full"
+              variant="outline"
             >
-              <Users className="mr-3 h-5 w-5" />
-              <span className="font-semibold">Manage All Users</span>
-            </Button>
-            <Button 
-              onClick={handleDatabaseAdmin}
-              className="w-full justify-start h-12 text-left bg-gradient-to-r from-[#1E2A78] to-[#2480EA] hover:from-[#1A2568] hover:to-[#1E6FD8] shadow-lg shadow-[#1E2A78]/25"
-            >
-              <Database className="mr-3 h-5 w-5" />
-              <span className="font-semibold">Database Administration</span>
-            </Button>
-            <Button 
-              onClick={handleSystemConfig}
-              className="w-full justify-start h-12 text-left bg-gradient-to-r from-[#1E2A78] to-[#2480EA] hover:from-[#1A2568] hover:to-[#1E6FD8] shadow-lg shadow-[#1E2A78]/25"
-            >
-              <Settings className="mr-3 h-5 w-5" />
-              <span className="font-semibold">System Configuration</span>
+              <Users className="mr-2 h-4 w-4" />
+              Manage Users
             </Button>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-white to-blue-50/20 border-[#2480EA]/20">
+        <Card className="border-0 shadow-sm hover:shadow-md transition-all duration-200 group">
           <CardHeader className="pb-4">
-            <CardTitle className="text-[#2480EA] text-xl font-bold">AI & Analytics</CardTitle>
-            <CardDescription className="text-gray-600">Configure AI features and view system analytics</CardDescription>
+            <div className="flex items-center justify-between">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
+                <Database className="h-5 w-5 text-white" />
+              </div>
+              <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-green-600 transition-colors" />
+            </div>
+            <CardTitle className="text-lg font-semibold">System Settings</CardTitle>
+            <CardDescription>Configure system-wide settings and database</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent>
+            <Button 
+              onClick={handleDatabaseAdmin}
+              className="w-full"
+              variant="outline"
+            >
+              <Settings className="mr-2 h-4 w-4" />
+              System Config
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-sm hover:shadow-md transition-all duration-200 group">
+          <CardHeader className="pb-4">
+            <div className="flex items-center justify-between">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
+                <Bot className="h-5 w-5 text-white" />
+              </div>
+              <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-purple-600 transition-colors" />
+            </div>
+            <CardTitle className="text-lg font-semibold">AI & Analytics</CardTitle>
+            <CardDescription>Configure AI features and view analytics</CardDescription>
+          </CardHeader>
+          <CardContent>
             <Button 
               onClick={handleAIChatbot}
-              className="w-full justify-start h-12 text-left bg-gradient-to-r from-[#2480EA] to-[#1E2A78] hover:from-[#1E6FD8] hover:to-[#1A2568] shadow-lg shadow-[#2480EA]/25"
+              className="w-full"
+              variant="outline"
             >
-              <Bot className="mr-3 h-5 w-5" />
-              <span className="font-semibold">AI Chatbot Settings</span>
-            </Button>
-            <Button 
-              onClick={handleSystemAnalytics}
-              className="w-full justify-start h-12 text-left bg-gradient-to-r from-[#2480EA] to-[#1E2A78] hover:from-[#1E6FD8] hover:to-[#1A2568] shadow-lg shadow-[#2480EA]/25"
-            >
-              <BarChart3 className="mr-3 h-5 w-5" />
-              <span className="font-semibold">System Analytics</span>
-            </Button>
-            <Button 
-              onClick={handleNotificationCenter}
-              className="w-full justify-start h-12 text-left bg-gradient-to-r from-[#2480EA] to-[#1E2A78] hover:from-[#1E6FD8] hover:to-[#1A2568] shadow-lg shadow-[#2480EA]/25"
-            >
-              <Bell className="mr-3 h-5 w-5" />
-              <span className="font-semibold">Notification Center</span>
+              <TrendingUp className="mr-2 h-4 w-4" />
+              AI Settings
             </Button>
           </CardContent>
         </Card>
       </div>
 
-      {/* Recent System Activity */}
-      <Card className="bg-gradient-to-br from-white to-gray-50/30 border-gray-200/60">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-[#1E2A78] text-xl font-bold">Recent System Activity</CardTitle>
-          <CardDescription className="text-gray-600">Latest department activities and performance metrics</CardDescription>
+      {/* System Activity Overview */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card className="border-0 shadow-sm">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-lg font-semibold">Department Activity</CardTitle>
+                <CardDescription>Latest department activities and performance</CardDescription>
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+                <Activity className="h-5 w-5 text-white" />
+              </div>
+            </div>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {stats?.departmentStats && stats.departmentStats.length > 0 ? (
               stats.departmentStats.map((dept, index) => (
-                <div key={index} className="flex items-center justify-between p-4 rounded-xl bg-gradient-to-r from-gray-50/50 to-white/50 border border-gray-200/60 hover:shadow-md hover:shadow-gray-900/5 transition-all duration-200">
-                  <div className="flex-1">
-                    <p className="font-semibold text-[#1E2A78] text-lg">{dept.department} Department</p>
-                    <p className="text-sm text-gray-600 font-medium">
-                      {dept.concernCount} concerns, {dept.resolvedCount} resolved
+                  <div key={index} className="flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                        <Building2 className="h-4 w-4 text-white" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-sm">{dept.department}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {dept.concernCount} concerns • {dept.resolvedCount} resolved
                     </p>
                   </div>
-                  <div className="text-right">
-                    <Badge className="bg-gradient-to-r from-green-500 to-green-600 text-white shadow-sm font-semibold px-3 py-1">
+                    </div>
+                    <Badge variant="secondary" className="text-xs">
                       Active
                     </Badge>
-                  </div>
                 </div>
               ))
             ) : (
               <div className="text-center py-8">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                  <BarChart3 className="h-8 w-8 text-gray-400" />
+                  <div className="w-12 h-12 mx-auto mb-3 rounded-lg bg-muted flex items-center justify-center">
+                    <Activity className="h-6 w-6 text-muted-foreground" />
+                  </div>
+                  <p className="text-sm font-medium text-muted-foreground">No activity data</p>
+                  <p className="text-xs text-muted-foreground mt-1">Activity will appear here once departments start using the system</p>
                 </div>
-                <p className="text-gray-500 font-medium">No recent activity data available</p>
-                <p className="text-sm text-gray-400 mt-1">Activity will appear here once departments start using the system</p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-sm">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-lg font-semibold">System Status</CardTitle>
+                <CardDescription>Current system health and performance</CardDescription>
               </div>
-            )}
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
+                <Cpu className="h-5 w-5 text-white" />
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 rounded-lg border bg-card">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
+                    <Shield className="h-4 w-4 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">System Health</p>
+                    <p className="text-xs text-muted-foreground">All systems operational</p>
+                  </div>
+                </div>
+                <Badge variant="default" className="bg-green-500 hover:bg-green-600">
+                  {stats?.systemHealth || 0}%
+                </Badge>
+              </div>
+              
+              <div className="flex items-center justify-between p-4 rounded-lg border bg-card">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                    <Globe className="h-4 w-4 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">API Status</p>
+                    <p className="text-xs text-muted-foreground">All endpoints responding</p>
+                  </div>
+                </div>
+                <Badge variant="default" className="bg-blue-500 hover:bg-blue-600">
+                  Online
+                </Badge>
+              </div>
+              
+              <div className="flex items-center justify-between p-4 rounded-lg border bg-card">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
+                    <Bot className="h-4 w-4 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">AI Services</p>
+                    <p className="text-xs text-muted-foreground">Chatbot and analytics active</p>
+                  </div>
+                </div>
+                <Badge variant="default" className="bg-purple-500 hover:bg-purple-600">
+                  Active
+                </Badge>
+              </div>
           </div>
         </CardContent>
       </Card>
+      </div>
     </div>
   )
 }

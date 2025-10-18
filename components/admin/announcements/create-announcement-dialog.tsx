@@ -8,7 +8,7 @@ import { Switch } from "@/components/ui/switch"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { CalendarIcon, Clock, Users, Target, Save, Send, Eye, Image as ImageIcon, Upload, X } from "lucide-react"
+import { CalendarIcon, Clock, Users, Target, Save, Send, Eye, Image as ImageIcon, Upload, X, CheckCircle } from "lucide-react"
 import { 
   AnnouncementMegaphoneIcon, 
   LinkIcon, 

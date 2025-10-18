@@ -31,8 +31,7 @@ import {
   FileText,
   BarChart3,
   Clock,
-  CheckCircle2,
-  XCircle2
+  CheckCircle2
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import { apiClient } from "@/lib/api-client"
@@ -170,36 +169,56 @@ export function AIChatbotManagement() {
   const loadFAQItems = async () => {
     try {
       const faqs = await apiClient.getFAQItems()
-      setFaqItems(faqs)
+      setFaqItems(Array.isArray(faqs) ? faqs : [])
     } catch (error) {
       console.error("Failed to load FAQ items:", error)
+      setFaqItems([])
     }
   }
 
   const loadChatSessions = async () => {
     try {
       const sessions = await apiClient.getChatSessions()
-      setChatSessions(sessions)
+      setChatSessions(Array.isArray(sessions) ? sessions : [])
     } catch (error) {
       console.error("Failed to load chat sessions:", error)
+      setChatSessions([])
     }
   }
 
   const loadTrainingBatches = async () => {
     try {
-      const response = await apiClient.get('/ai/training/batches')
-      setTrainingBatches(response.data || [])
+      // TODO: Implement API endpoint for training batches
+      setTrainingBatches([])
     } catch (error) {
       console.error('Failed to load training batches:', error)
+      setTrainingBatches([])
     }
   }
 
   const loadTrainingStats = async () => {
     try {
-      const response = await apiClient.get('/ai/training/stats')
-      setTrainingStats(response.data)
+      // TODO: Implement API endpoint for training stats
+      setTrainingStats({
+        total_faq_items: (faqItems || []).length,
+        active_faq_items: (faqItems || []).filter(item => item.active).length,
+        total_training_data: 0,
+        active_training_data: 0,
+        total_batches: 0,
+        completed_batches: 0,
+        recent_batches: 0
+      })
     } catch (error) {
       console.error('Failed to load training stats:', error)
+      setTrainingStats({
+        total_faq_items: (faqItems || []).length,
+        active_faq_items: (faqItems || []).filter(item => item.active).length,
+        total_training_data: 0,
+        active_training_data: 0,
+        total_batches: 0,
+        completed_batches: 0,
+        recent_batches: 0
+      })
     }
   }
 
@@ -259,24 +278,12 @@ export function AIChatbotManagement() {
 
     try {
       setUploading(true)
-      const formData = new FormData()
-      formData.append('training_file', selectedFile)
-
-      const response = await apiClient.post('/ai/training/bulk-upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
-
-      if (response.success) {
-        alert(`Training data uploaded successfully!\n\nTotal items: ${response.data.total_items}\nSuccessful: ${response.data.successful_items}\nFailed: ${response.data.failed_items}`)
-        setSelectedFile(null)
-        loadFAQItems()
-        loadTrainingBatches()
-        loadTrainingStats()
-      } else {
-        alert('Failed to upload training data: ' + response.message)
-      }
+      // TODO: Implement API endpoint for training data upload
+      alert('Training data upload feature is not yet implemented. Please contact the development team.')
+      setSelectedFile(null)
+      loadFAQItems()
+      loadTrainingBatches()
+      loadTrainingStats()
     } catch (error) {
       console.error('Bulk upload failed:', error)
       alert('Failed to upload training data. Please check the file format.')
@@ -342,23 +349,23 @@ export function AIChatbotManagement() {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     }
-    setFaqItems([...faqItems, newFAQ])
+    setFaqItems([...(faqItems || []), newFAQ])
   }
 
   const updateFAQItem = (id: string, updates: Partial<FAQItem>) => {
-    setFaqItems(faqItems.map(item => 
+    setFaqItems((faqItems || []).map(item => 
       item.id === id ? { ...item, ...updates, updatedAt: new Date().toISOString() } : item
     ))
   }
 
   const deleteFAQItem = (id: string) => {
-    setFaqItems(faqItems.filter(item => item.id !== id))
+    setFaqItems((faqItems || []).filter(item => item.id !== id))
   }
 
   const saveFAQItems = async () => {
     try {
       setSaving(true)
-      await apiClient.updateFAQItems(faqItems)
+      await apiClient.updateFAQItems(faqItems || [])
       // Show success message
     } catch (error) {
       console.error("Failed to save FAQ items:", error)
@@ -795,7 +802,7 @@ export function AIChatbotManagement() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {faqItems.map((faq) => (
+                {(faqItems || []).map((faq) => (
                   <div key={faq.id} className="p-4 border rounded-lg space-y-3">
                     <div className="flex items-center justify-between">
                       <Badge variant={faq.active ? "default" : "secondary"}>
@@ -893,7 +900,7 @@ export function AIChatbotManagement() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {chatSessions.map((session) => (
+                {(chatSessions || []).map((session) => (
                   <div key={session.id} className="p-4 border rounded-lg">
                     <div className="flex items-center justify-between mb-3">
                       <div>
@@ -905,7 +912,7 @@ export function AIChatbotManagement() {
                       <Badge variant="outline">{session.context}</Badge>
                     </div>
                     <div className="space-y-2 max-h-32 overflow-y-auto">
-                      {session.messages.slice(-3).map((message) => (
+                      {(session.messages || []).slice(-3).map((message) => (
                         <div
                           key={message.id}
                           className={`p-2 rounded text-sm ${
@@ -925,7 +932,7 @@ export function AIChatbotManagement() {
                     </div>
                   </div>
                 ))}
-                {chatSessions.length === 0 && (
+                {(chatSessions || []).length === 0 && (
                   <div className="text-center py-8 text-muted-foreground">
                     <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-50" />
                     <p>No chat sessions yet.</p>

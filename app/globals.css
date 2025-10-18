@@ -118,6 +118,7 @@
   --metric-highlight: #0EA5E9;
   --content-overlay: rgba(30, 42, 120, 0.85);
   
+  /* Modern Design System Colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -142,10 +143,15 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  
+  /* Enhanced Border Radius System */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  
+  /* Sidebar Design System */
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -154,6 +160,21 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  
+  /* Modern Shadow System */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  
+  /* Animation System */
+  --animation-duration-fast: 150ms;
+  --animation-duration-normal: 200ms;
+  --animation-duration-slow: 300ms;
+  --animation-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --animation-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --animation-ease-in: cubic-bezier(0.4, 0, 1, 1);
 }
 
 @layer base {
@@ -162,6 +183,40 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Sidebar optimization to prevent glitch during navigation */
+@layer components {
+  [data-slot="sidebar-wrapper"] {
+    contain: layout style paint;
+  }
+  
+  [data-slot="sidebar-container"] {
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+  
+  [data-slot="sidebar-gap"] {
+    will-change: width;
+    backface-visibility: hidden;
+  }
+  
+  /* Prevent flash of unstyled content during navigation */
+  [data-slot="sidebar"] {
+    opacity: 1;
+    transition: opacity 0.1s ease-out;
+  }
+  
+  /* Optimize sidebar rendering */
+  .group\/sidebar-wrapper {
+    contain: layout style paint;
+  }
+  
+  /* Sidebar provider optimization */
+  .sidebar-provider {
+    contain: layout style paint;
   }
 }
 
@@ -355,6 +410,155 @@
   text-rendering: optimizeLegibility;
 }
 
+/* Responsive Design Enhancements */
+@media (max-width: 768px) {
+  .modern-card {
+    @apply shadow-sm;
+  }
+  
+  .modern-card-hover:hover {
+    @apply transform-none shadow-sm;
+  }
+  
+  .btn-modern:hover {
+    @apply transform-none;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid-responsive {
+    @apply grid-cols-1;
+  }
+  
+  .text-responsive-lg {
+    @apply text-2xl;
+  }
+  
+  .text-responsive-xl {
+    @apply text-3xl;
+  }
+  
+  .padding-responsive {
+    @apply p-4;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .grid-responsive {
+    @apply grid-cols-2;
+  }
+  
+  .text-responsive-lg {
+    @apply text-3xl;
+  }
+  
+  .text-responsive-xl {
+    @apply text-4xl;
+  }
+  
+  .padding-responsive {
+    @apply p-6;
+  }
+}
+
+@media (min-width: 1025px) {
+  .grid-responsive {
+    @apply grid-cols-3;
+  }
+  
+  .text-responsive-lg {
+    @apply text-4xl;
+  }
+  
+  .text-responsive-xl {
+    @apply text-5xl;
+  }
+  
+  .padding-responsive {
+    @apply p-8;
+  }
+}
+
+/* Mobile-first responsive utilities */
+.responsive-grid {
+  @apply grid grid-cols-1 gap-4;
+}
+
+@media (min-width: 640px) {
+  .responsive-grid {
+    @apply grid-cols-2 gap-6;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-grid {
+    @apply grid-cols-3 gap-8;
+  }
+}
+
+@media (min-width: 1280px) {
+  .responsive-grid {
+    @apply grid-cols-4 gap-8;
+  }
+}
+
+/* Responsive text sizing */
+.responsive-text-xs {
+  @apply text-xs;
+}
+
+@media (min-width: 640px) {
+  .responsive-text-xs {
+    @apply text-sm;
+  }
+}
+
+.responsive-text-sm {
+  @apply text-sm;
+}
+
+@media (min-width: 640px) {
+  .responsive-text-sm {
+    @apply text-base;
+  }
+}
+
+.responsive-text-base {
+  @apply text-base;
+}
+
+@media (min-width: 640px) {
+  .responsive-text-base {
+    @apply text-lg;
+  }
+}
+
+.responsive-text-lg {
+  @apply text-lg;
+}
+
+@media (min-width: 640px) {
+  .responsive-text-lg {
+    @apply text-xl;
+  }
+}
+
+.responsive-text-xl {
+  @apply text-xl;
+}
+
+@media (min-width: 640px) {
+  .responsive-text-xl {
+    @apply text-2xl;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-text-xl {
+    @apply text-3xl;
+  }
+}
+
 /* Enhanced Logo Design Classes */
 .login-logo-container {
   position: relative;
@@ -510,14 +714,14 @@
   padding-bottom: 0.75rem;
 }
 
-/* Modern Web Portal Enhancements */
+/* Modern Design System Utilities */
 .modern-card-hover {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all var(--animation-duration-slow) var(--animation-ease-in-out);
 }
 
 .modern-card-hover:hover {
   transform: translateY(-2px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-xl);
 }
 
 .glass-effect {
@@ -533,16 +737,92 @@
   background-clip: text;
 }
 
+/* Enhanced Shadow System */
 .modern-shadow {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-sm);
+}
+
+.modern-shadow-md {
+  box-shadow: var(--shadow-md);
 }
 
 .modern-shadow-lg {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-lg);
 }
 
 .modern-shadow-xl {
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-xl);
+}
+
+.modern-shadow-2xl {
+  box-shadow: var(--shadow-2xl);
+}
+
+/* Modern Animation Utilities */
+.animate-fade-in {
+  animation: fadeIn var(--animation-duration-normal) var(--animation-ease-out);
+}
+
+.animate-slide-up {
+  animation: slideUp var(--animation-duration-normal) var(--animation-ease-out);
+}
+
+.animate-scale-in {
+  animation: scaleIn var(--animation-duration-fast) var(--animation-ease-out);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from { 
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to { 
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Modern Card Styles */
+.modern-card {
+  @apply border-0 shadow-sm hover:shadow-md transition-all duration-200;
+}
+
+.modern-card-elevated {
+  @apply border-0 shadow-md hover:shadow-lg transition-all duration-200;
+}
+
+/* Enhanced Focus States */
+.focus-ring-modern {
+  @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/20;
+}
+
+/* Modern Button Enhancements */
+.btn-modern {
+  @apply transition-all duration-200 ease-in-out;
+}
+
+.btn-modern:hover {
+  @apply transform -translate-y-0.5;
+}
+
+.btn-modern:active {
+  @apply transform translate-y-0;
 }
 
 /* Enhanced focus states */

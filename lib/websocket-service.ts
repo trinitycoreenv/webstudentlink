@@ -53,7 +53,12 @@ class WebSocketService {
     }
 
     this.isConnecting = true
-    const wsUrl = process.env.NEXT_PUBLIC_WS_URL || 'ws://192.168.100.145:6001'
+    const wsUrl = process.env.NEXT_PUBLIC_WS_URL
+    if (!wsUrl) {
+      console.warn('WebSocket disabled: NEXT_PUBLIC_WS_URL is not set')
+      this.isConnecting = false
+      return
+    }
     
     try {
       this.ws = new WebSocket(wsUrl)

@@ -154,19 +154,16 @@ export default function AdvancedAnalyticsPage() {
   }
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
-      <header className="bg-white border-b border-gray-200 px-6 py-4">
+    <div className="space-y-8">
+      {/* Page Header */}
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-              <BarChart3 className="h-8 w-8 mr-3 text-blue-600" />
-              Advanced Analytics Dashboard
-            </h1>
-            <p className="text-gray-600">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Advanced Analytics</h1>
+          <p className="text-muted-foreground">
               Comprehensive insights and performance metrics
             </p>
           </div>
-          <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-3">
             <Button
               variant="outline"
               onClick={handleRefresh}
@@ -183,17 +180,16 @@ export default function AdvancedAnalyticsPage() {
               <Download className="h-4 w-4" />
               <span>Export</span>
             </Button>
-            <Badge variant="outline" className="text-blue-600 border-blue-600">
+          <Badge variant="secondary" className="text-xs">
               {user.role === 'admin' ? 'System Admin' : 'Department Head'}
             </Badge>
           </div>
         </div>
-      </header>
 
-      <main className="flex-1 overflow-y-auto p-6">
-        <Card className="mb-6">
+      {/* Analytics Filters */}
+      <Card className="border-0 shadow-sm">
           <CardHeader>
-            <CardTitle className="flex items-center">
+          <CardTitle className="flex items-center text-lg">
               <Filter className="h-5 w-5 mr-2" />
               Analytics Filters
             </CardTitle>
@@ -208,15 +204,15 @@ export default function AdvancedAnalyticsPage() {
 
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
           </div>
         ) : error ? (
-          <Card>
+        <Card className="border-0 shadow-sm">
             <CardContent className="flex items-center justify-center py-12">
               <div className="text-center">
-                <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-                <p className="text-lg font-medium text-gray-900 mb-2">Error Loading Analytics</p>
-                <p className="text-gray-600 mb-4">{error}</p>
+              <AlertTriangle className="h-12 w-12 text-destructive mx-auto mb-4" />
+              <p className="text-lg font-medium text-foreground mb-2">Error Loading Analytics</p>
+              <p className="text-muted-foreground mb-4">{error}</p>
                 <Button onClick={fetchAnalytics}>
                   Try Again
                 </Button>
@@ -224,104 +220,191 @@ export default function AdvancedAnalyticsPage() {
             </CardContent>
           </Card>
         ) : analyticsData ? (
-          <div className="space-y-6">
+        <div className="space-y-8">
+          {/* Key Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <MetricCard
-                title="Total Concerns"
-                value={analyticsData.overview.total_concerns}
-                icon={<BarChart3 className="h-6 w-6" />}
-                color="blue"
-                trend={null}
-              />
-              <MetricCard
-                title="Resolved"
-                value={analyticsData.overview.resolved_concerns}
-                icon={<CheckCircle className="h-6 w-6" />}
-                color="green"
-                subtitle={`${analyticsData.overview.resolution_rate}% resolution rate`}
-              />
-              <MetricCard
-                title="Urgent Concerns"
-                value={analyticsData.overview.urgent_concerns}
-                icon={<AlertTriangle className="h-6 w-6" />}
-                color="red"
-                subtitle={`${analyticsData.overview.high_priority_concerns} high priority`}
-              />
-              <MetricCard
-                title="Avg Resolution Time"
-                value={`${analyticsData.overview.avg_resolution_time}h`}
-                icon={<Clock className="h-6 w-6" />}
-                color="purple"
-                subtitle="Average time to resolve"
-              />
+            <Card className="border-0 shadow-sm hover:shadow-md transition-all duration-200">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Concerns</CardTitle>
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                  <BarChart3 className="h-4 w-4 text-white" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-foreground">{analyticsData.overview.total_concerns}</div>
+                <p className="text-xs text-muted-foreground mt-1">All concerns tracked</p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-sm hover:shadow-md transition-all duration-200">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Resolved</CardTitle>
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
+                  <CheckCircle className="h-4 w-4 text-white" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-foreground">{analyticsData.overview.resolved_concerns}</div>
+                <p className="text-xs text-muted-foreground mt-1">{analyticsData.overview.resolution_rate}% resolution rate</p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-sm hover:shadow-md transition-all duration-200">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Urgent Concerns</CardTitle>
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+                  <AlertTriangle className="h-4 w-4 text-white" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-foreground">{analyticsData.overview.urgent_concerns}</div>
+                <p className="text-xs text-muted-foreground mt-1">{analyticsData.overview.high_priority_concerns} high priority</p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-sm hover:shadow-md transition-all duration-200">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Avg Resolution Time</CardTitle>
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
+                  <Clock className="h-4 w-4 text-white" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-foreground">{analyticsData.overview.avg_resolution_time}h</div>
+                <p className="text-xs text-muted-foreground mt-1">Average time to resolve</p>
+              </CardContent>
+            </Card>
             </div>
 
+          {/* Performance Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <MetricCard
-                title="First Response"
-                value={`${analyticsData.performance.avg_first_response_time_hours}h`}
-                icon={<Clock className="h-6 w-6" />}
-                color="blue"
-                subtitle="Average first response time"
-              />
-              <MetricCard
-                title="24h Resolution"
-                value={`${analyticsData.performance.resolution_within_24h_rate}%`}
-                icon={<TrendingUp className="h-6 w-6" />}
-                color="green"
-                subtitle={`${analyticsData.performance.resolved_within_24h} concerns`}
-              />
-              <MetricCard
-                title="48h Resolution"
-                value={`${analyticsData.performance.resolution_within_48h_rate}%`}
-                icon={<CheckCircle className="h-6 w-6" />}
-                color="emerald"
-                subtitle={`${analyticsData.performance.resolved_within_48h} concerns`}
-              />
-              <MetricCard
-                title="Fastest Resolution"
-                value={`${analyticsData.performance.fastest_resolution_hours}h`}
-                icon={<TrendingUp className="h-6 w-6" />}
-                color="yellow"
-                subtitle="Best performance"
-              />
+            <Card className="border-0 shadow-sm hover:shadow-md transition-all duration-200">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">First Response</CardTitle>
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                  <Clock className="h-4 w-4 text-white" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-foreground">{analyticsData.performance.avg_first_response_time_hours}h</div>
+                <p className="text-xs text-muted-foreground mt-1">Average first response time</p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-sm hover:shadow-md transition-all duration-200">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">24h Resolution</CardTitle>
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
+                  <TrendingUp className="h-4 w-4 text-white" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-foreground">{analyticsData.performance.resolution_within_24h_rate}%</div>
+                <p className="text-xs text-muted-foreground mt-1">{analyticsData.performance.resolved_within_24h} concerns</p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-sm hover:shadow-md transition-all duration-200">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">48h Resolution</CardTitle>
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center">
+                  <CheckCircle className="h-4 w-4 text-white" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-foreground">{analyticsData.performance.resolution_within_48h_rate}%</div>
+                <p className="text-xs text-muted-foreground mt-1">{analyticsData.performance.resolved_within_48h} concerns</p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-sm hover:shadow-md transition-all duration-200">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Fastest Resolution</CardTitle>
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-yellow-500 to-yellow-600 flex items-center justify-center">
+                  <TrendingUp className="h-4 w-4 text-white" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-foreground">{analyticsData.performance.fastest_resolution_hours}h</div>
+                <p className="text-xs text-muted-foreground mt-1">Best performance</p>
+              </CardContent>
+            </Card>
             </div>
 
+          {/* Charts Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card className="border-0 shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-lg">Concerns Over Time</CardTitle>
+              </CardHeader>
+              <CardContent>
               <ChartContainer
                 title="Concerns Over Time"
                 chartType="concerns_over_time"
                 filters={filters}
               />
+              </CardContent>
+            </Card>
+            
+            <Card className="border-0 shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-lg">Priority Distribution</CardTitle>
+              </CardHeader>
+              <CardContent>
               <ChartContainer
                 title="Priority Distribution"
                 chartType="priority_distribution"
                 filters={filters}
               />
+              </CardContent>
+            </Card>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card className="border-0 shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-lg">Department Performance</CardTitle>
+              </CardHeader>
+              <CardContent>
               <ChartContainer
                 title="Department Performance"
                 chartType="department_performance"
                 filters={filters}
               />
+              </CardContent>
+            </Card>
+            
+            <Card className="border-0 shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-lg">Resolution Times</CardTitle>
+              </CardHeader>
+              <CardContent>
               <ChartContainer
                 title="Resolution Times"
                 chartType="resolution_times"
                 filters={filters}
               />
+              </CardContent>
+            </Card>
             </div>
 
+          <Card className="border-0 shadow-sm">
+            <CardHeader>
+              <CardTitle className="text-lg">Staff Workload Distribution</CardTitle>
+            </CardHeader>
+            <CardContent>
             <ChartContainer
               title="Staff Workload Distribution"
               chartType="staff_workload"
               filters={filters}
             />
+            </CardContent>
+          </Card>
 
-            <Card>
+          {/* Department Performance Table */}
+          <Card className="border-0 shadow-sm">
               <CardHeader>
-                <CardTitle className="flex items-center">
+              <CardTitle className="flex items-center text-lg">
                   <Building className="h-5 w-5 mr-2" />
                   Department Performance
                 </CardTitle>
@@ -331,34 +414,34 @@ export default function AdvancedAnalyticsPage() {
                   <table className="w-full">
                     <thead>
                       <tr className="border-b">
-                        <th className="text-left py-3 px-4 font-medium">Department</th>
-                        <th className="text-right py-3 px-4 font-medium">Total Concerns</th>
-                        <th className="text-right py-3 px-4 font-medium">Resolved</th>
-                        <th className="text-right py-3 px-4 font-medium">Resolution Rate</th>
-                        <th className="text-right py-3 px-4 font-medium">Avg Time</th>
-                        <th className="text-right py-3 px-4 font-medium">Staff Count</th>
-                        <th className="text-right py-3 px-4 font-medium">Workload/Staff</th>
+                      <th className="text-left py-3 px-4 font-medium text-sm">Department</th>
+                      <th className="text-right py-3 px-4 font-medium text-sm">Total Concerns</th>
+                      <th className="text-right py-3 px-4 font-medium text-sm">Resolved</th>
+                      <th className="text-right py-3 px-4 font-medium text-sm">Resolution Rate</th>
+                      <th className="text-right py-3 px-4 font-medium text-sm">Avg Time</th>
+                      <th className="text-right py-3 px-4 font-medium text-sm">Staff Count</th>
+                      <th className="text-right py-3 px-4 font-medium text-sm">Workload/Staff</th>
                       </tr>
                     </thead>
                     <tbody>
                       {analyticsData.department_analytics.map((dept) => (
-                        <tr key={dept.id} className="border-b hover:bg-gray-50">
+                      <tr key={dept.id} className="border-b hover:bg-accent/50 transition-colors">
                           <td className="py-3 px-4">
                             <div>
-                              <div className="font-medium">{dept.name}</div>
-                              <div className="text-sm text-gray-500">{dept.code}</div>
+                            <div className="font-medium text-sm">{dept.name}</div>
+                            <div className="text-xs text-muted-foreground">{dept.code}</div>
                             </div>
                           </td>
-                          <td className="text-right py-3 px-4">{dept.total_concerns}</td>
-                          <td className="text-right py-3 px-4">{dept.resolved_concerns}</td>
+                        <td className="text-right py-3 px-4 text-sm">{dept.total_concerns}</td>
+                        <td className="text-right py-3 px-4 text-sm">{dept.resolved_concerns}</td>
                           <td className="text-right py-3 px-4">
-                            <Badge variant={dept.resolution_rate >= 80 ? "default" : "secondary"}>
+                          <Badge variant={dept.resolution_rate >= 80 ? "default" : "secondary"} className="text-xs">
                               {dept.resolution_rate}%
                             </Badge>
                           </td>
-                          <td className="text-right py-3 px-4">{dept.avg_resolution_time}h</td>
-                          <td className="text-right py-3 px-4">{dept.staff_count}</td>
-                          <td className="text-right py-3 px-4">{dept.workload_per_staff}</td>
+                        <td className="text-right py-3 px-4 text-sm">{dept.avg_resolution_time}h</td>
+                        <td className="text-right py-3 px-4 text-sm">{dept.staff_count}</td>
+                        <td className="text-right py-3 px-4 text-sm">{dept.workload_per_staff}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -367,9 +450,10 @@ export default function AdvancedAnalyticsPage() {
               </CardContent>
             </Card>
 
-            <Card>
+          {/* Staff Performance Table */}
+          <Card className="border-0 shadow-sm">
               <CardHeader>
-                <CardTitle className="flex items-center">
+              <CardTitle className="flex items-center text-lg">
                   <Users className="h-5 w-5 mr-2" />
                   Top Performing Staff
                 </CardTitle>
@@ -379,36 +463,36 @@ export default function AdvancedAnalyticsPage() {
                   <table className="w-full">
                     <thead>
                       <tr className="border-b">
-                        <th className="text-left py-3 px-4 font-medium">Staff Member</th>
-                        <th className="text-left py-3 px-4 font-medium">Department</th>
-                        <th className="text-right py-3 px-4 font-medium">Total Assigned</th>
-                        <th className="text-right py-3 px-4 font-medium">Resolved</th>
-                        <th className="text-right py-3 px-4 font-medium">Resolution Rate</th>
-                        <th className="text-right py-3 px-4 font-medium">Avg Time</th>
-                        <th className="text-right py-3 px-4 font-medium">Urgent</th>
+                      <th className="text-left py-3 px-4 font-medium text-sm">Staff Member</th>
+                      <th className="text-left py-3 px-4 font-medium text-sm">Department</th>
+                      <th className="text-right py-3 px-4 font-medium text-sm">Total Assigned</th>
+                      <th className="text-right py-3 px-4 font-medium text-sm">Resolved</th>
+                      <th className="text-right py-3 px-4 font-medium text-sm">Resolution Rate</th>
+                      <th className="text-right py-3 px-4 font-medium text-sm">Avg Time</th>
+                      <th className="text-right py-3 px-4 font-medium text-sm">Urgent</th>
                       </tr>
                     </thead>
                     <tbody>
                       {analyticsData.staff_analytics.map((staff) => (
-                        <tr key={staff.id} className="border-b hover:bg-gray-50">
+                      <tr key={staff.id} className="border-b hover:bg-accent/50 transition-colors">
                           <td className="py-3 px-4">
                             <div>
-                              <div className="font-medium">{staff.name}</div>
-                              <div className="text-sm text-gray-500">{staff.email}</div>
+                            <div className="font-medium text-sm">{staff.name}</div>
+                            <div className="text-xs text-muted-foreground">{staff.email}</div>
                             </div>
                           </td>
-                          <td className="py-3 px-4">{staff.department}</td>
-                          <td className="text-right py-3 px-4">{staff.total_assigned}</td>
-                          <td className="text-right py-3 px-4">{staff.resolved_concerns}</td>
+                        <td className="py-3 px-4 text-sm">{staff.department}</td>
+                        <td className="text-right py-3 px-4 text-sm">{staff.total_assigned}</td>
+                        <td className="text-right py-3 px-4 text-sm">{staff.resolved_concerns}</td>
                           <td className="text-right py-3 px-4">
-                            <Badge variant={staff.resolution_rate >= 80 ? "default" : "secondary"}>
+                          <Badge variant={staff.resolution_rate >= 80 ? "default" : "secondary"} className="text-xs">
                               {staff.resolution_rate}%
                             </Badge>
                           </td>
-                          <td className="text-right py-3 px-4">{staff.avg_resolution_time}h</td>
+                        <td className="text-right py-3 px-4 text-sm">{staff.avg_resolution_time}h</td>
                           <td className="text-right py-3 px-4">
                             {staff.urgent_concerns > 0 && (
-                              <Badge variant="destructive">{staff.urgent_concerns}</Badge>
+                            <Badge variant="destructive" className="text-xs">{staff.urgent_concerns}</Badge>
                             )}
                           </td>
                         </tr>
@@ -419,32 +503,49 @@ export default function AdvancedAnalyticsPage() {
               </CardContent>
             </Card>
 
+          {/* Satisfaction Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <MetricCard
-                title="Average Rating"
-                value={analyticsData.satisfaction_metrics.avg_rating.toFixed(1)}
-                icon={<Star className="h-6 w-6" />}
-                color="yellow"
-                subtitle={`${analyticsData.satisfaction_metrics.total_rated} total ratings`}
-              />
-              <MetricCard
-                title="Satisfaction Rate"
-                value={`${analyticsData.satisfaction_metrics.satisfaction_rate}%`}
-                icon={<TrendingUp className="h-6 w-6" />}
-                color="green"
-                subtitle={`${analyticsData.satisfaction_metrics.high_ratings} high ratings`}
-              />
-              <MetricCard
-                title="Response Rate"
-                value={`${analyticsData.response_times.response_within_30min_rate}%`}
-                icon={<Clock className="h-6 w-6" />}
-                color="blue"
-                subtitle="Within 30 minutes"
-              />
+            <Card className="border-0 shadow-sm hover:shadow-md transition-all duration-200">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Average Rating</CardTitle>
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-yellow-500 to-yellow-600 flex items-center justify-center">
+                  <Star className="h-4 w-4 text-white" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-foreground">{analyticsData.satisfaction_metrics.avg_rating.toFixed(1)}</div>
+                <p className="text-xs text-muted-foreground mt-1">{analyticsData.satisfaction_metrics.total_rated} total ratings</p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-sm hover:shadow-md transition-all duration-200">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Satisfaction Rate</CardTitle>
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
+                  <TrendingUp className="h-4 w-4 text-white" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-foreground">{analyticsData.satisfaction_metrics.satisfaction_rate}%</div>
+                <p className="text-xs text-muted-foreground mt-1">{analyticsData.satisfaction_metrics.high_ratings} high ratings</p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-sm hover:shadow-md transition-all duration-200">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Response Rate</CardTitle>
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                  <Clock className="h-4 w-4 text-white" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-foreground">{analyticsData.response_times.response_within_30min_rate}%</div>
+                <p className="text-xs text-muted-foreground mt-1">Within 30 minutes</p>
+              </CardContent>
+            </Card>
             </div>
           </div>
         ) : null}
-      </main>
     </div>
   )
 }

@@ -22,6 +22,7 @@ import {
 } from "lucide-react"
 import { apiClient, type Concern } from "@/lib/api-client"
 import { ChatHistoryModal } from "@/components/concerns/chat-history-modal"
+import { ViewConcernDetailsDialog } from "@/components/staff/view-concern-details-dialog"
 
 export default function StaffConcerns() {
   const { user } = useAuth()
@@ -34,6 +35,7 @@ export default function StaffConcerns() {
   const [showArchived, setShowArchived] = useState(false)
   const [selectedConcern, setSelectedConcern] = useState<Concern | null>(null)
   const [isChatModalOpen, setIsChatModalOpen] = useState(false)
+  const [isViewDetailsOpen, setViewDetailsOpen] = useState(false)
 
   useEffect(() => {
     const fetchConcerns = async () => {
@@ -65,6 +67,16 @@ export default function StaffConcerns() {
 
   const handleCloseChatModal = () => {
     setIsChatModalOpen(false)
+    setSelectedConcern(null)
+  }
+
+  const handleViewDetails = (concern: Concern) => {
+    setSelectedConcern(concern)
+    setViewDetailsOpen(true)
+  }
+
+  const handleCloseViewDetails = () => {
+    setViewDetailsOpen(false)
     setSelectedConcern(null)
   }
 
@@ -256,10 +268,7 @@ export default function StaffConcerns() {
                               <Button 
                                 size="sm" 
                                 variant="outline"
-                                onClick={() => {
-                                  // Open concern details in a modal or new page
-                                  alert(`Viewing concern: ${concern.subject}\n\nDescription: ${concern.description}\n\nStudent: ${concern.student.name}\n\nStatus: ${concern.status}`)
-                                }}
+                                onClick={() => handleViewDetails(concern)}
                               >
                                 <Eye className="h-4 w-4 mr-1" />
                                 View
@@ -339,6 +348,15 @@ export default function StaffConcerns() {
         isOpen={isChatModalOpen}
         onClose={handleCloseChatModal}
       />
+
+      {/* View Concern Details Dialog */}
+      {selectedConcern && (
+        <ViewConcernDetailsDialog
+          concern={selectedConcern}
+          isOpen={isViewDetailsOpen}
+          onClose={handleCloseViewDetails}
+        />
+      )}
     </ProtectedRoute>
   )
 }
